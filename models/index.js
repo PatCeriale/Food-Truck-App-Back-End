@@ -1,5 +1,5 @@
 module.exports = {
-    Reviews: require("./reviewsModel.js"),
+    Review: require("./reviewsModel.js"),
     User: require("./userModel.js"),
     Vendor: require("./vendorModel")
   };

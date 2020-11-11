@@ -59,6 +59,26 @@ app.post("/newvendor", (req, res)=>{
       });
 })
 
+//Review routes
+app.get("/review", (req, res) => {
+    db.Review.find()
+    .then(dbReview => {
+      res.json(dbReview);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
+
+app.post("/newreview", (req, res)=>{
+    db.Review.create(req.body).then(dbReview => {
+        res.json(dbReview);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+})
+
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
