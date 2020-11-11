@@ -1,0 +1,26 @@
+{
+  "name": "Food-Truck-App-Back-End",
+  "version": "1.0.0",
+  "description": "tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PatCeriale/Food-Truck-App-Back-End.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PatCeriale/Food-Truck-App-Back-End/issues"
+  },
+  "homepage": "https://github.com/PatCeriale/Food-Truck-App-Back-End#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.10.13",
+    "morgan": "^1.10.0"
+  }
+}
