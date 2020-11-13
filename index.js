@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
       res.json(err);
     });
 });
+
 //CREATE new user
 app.post("/newuser", (req, res)=>{
     db.User.create(req.body).then(dbUser => {
@@ -38,6 +39,19 @@ app.post("/newuser", (req, res)=>{
         res.json(err);
       });
 })
+
+//UPDATE a user
+app.put("/user/:id", (req, res)=>{
+  db.User.findByIdAndUpdate(req.params.id,
+    req.body
+  ).then(dbUser => {
+    res.json(dbUser);
+  })
+  .catch(err => {
+    res.json(err);
+  })
+  });
+
 
 //DELETE user
 app.delete("/user/:id", (req, res) => {
@@ -49,6 +63,7 @@ app.delete("/user/:id", (req, res) => {
     res.json(err);
   });
 });
+
 
 
 
@@ -74,6 +89,19 @@ app.post("/newvendor", (req, res)=>{
       });
 })
 
+
+//UPDATE a vendor
+app.put("/vendor/:id", (req, res)=>{
+  db.Vendor.findByIdAndUpdate(req.params.id,
+    req.body
+  ).then(dbVendor => {
+    res.json(dbVendor);
+  })
+  .catch(err => {
+    res.json(err);
+  })
+  });
+
 //DELETE vendor
 app.delete("/vendor/:id", (req, res) => {
   db.Vendor.deleteOne(
@@ -88,7 +116,6 @@ app.delete("/vendor/:id", (req, res) => {
     res.json(err);
   });
 });
-
 
 //Review routes
 //GET all reviews
@@ -111,6 +138,19 @@ app.post("/newreview", (req, res)=>{
         res.json(err);
       });
 })
+
+
+//UPDATE a review
+app.put("/review/:id", (req, res)=>{
+db.Review.findByIdAndUpdate(req.params.id,
+  req.body
+).then(dbReview => {
+  res.json(dbReview);
+})
+.catch(err => {
+  res.json(err);
+})
+});
 
 
 //DELETE a review
