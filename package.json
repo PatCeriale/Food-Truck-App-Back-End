@@ -20,7 +20,7 @@
   "homepage": "https://github.com/PatCeriale/Food-Truck-App-Back-End#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.10.13",
+    "mongoose": "^5.10.14",
     "morgan": "^1.10.0"
   }
 }

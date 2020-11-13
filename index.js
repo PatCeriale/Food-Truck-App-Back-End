@@ -51,6 +51,7 @@ app.get("/vendor", (req, res) => {
 });
 
 app.post("/newvendor", (req, res)=>{
+  console.log("inside post req");
     db.Vendor.create(req.body).then(dbVendor => {
         res.json(dbVendor);
       })
