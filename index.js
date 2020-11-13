@@ -52,6 +52,16 @@ app.put("/user/:id", (req, res)=>{
   })
   });
 
+  // update users favorite vendor 
+  app.put("/updatevendor/:id", (req, res) => {
+  db.User.findOneAndUpdate(req.params.id, { $push: { favoriteVendor: req.body.vendorId } }, { new: true })
+      .then(dbUser => {
+        res.json(dbUser);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
 
 //DELETE user
 app.delete("/user/:id", (req, res) => {
@@ -88,6 +98,8 @@ app.post("/newvendor", (req, res)=>{
         res.json(err);
       });
 })
+
+
 
 
 //UPDATE a vendor

@@ -22,9 +22,12 @@ const UserSchema = new Schema({
   isAdmin: {
     type: Boolean,
   },
-  favoriteVendor: {
-    type: String,
-  },
+  favoriteVendor: [
+    {
+      type:Schema.Types.ObjectId,
+      ref:"Vendor"
+    }
+  ],
   userCreated: {
     type: Date,
     default: Date.now,
