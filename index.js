@@ -2,7 +2,6 @@ const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 
-
 const db = require("./models");
 
 const PORT = process.env.PORT || 3000;
@@ -19,7 +18,8 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", { useNewUrlParser: true });
 
-//User routes
+//User routes 
+//GET all users
 app.get("/", (req, res) => {
     db.User.find()
     .then(dbUser => {
@@ -29,8 +29,8 @@ app.get("/", (req, res) => {
       res.json(err);
     });
 });
-
-app.post("/", (req, res)=>{
+//CREATE new user
+app.post("/newuser", (req, res)=>{
     db.User.create(req.body).then(dbUser => {
         res.json(dbUser);
       })
@@ -39,7 +39,21 @@ app.post("/", (req, res)=>{
       });
 })
 
+//DELETE user
+app.delete("/user/:id", (req, res) => {
+  db.User.deleteOne({_id: req.params.id})
+  .then(dbUser => {
+    res.json(dbUser);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
+
+
+
 //Vendor routes
+//GET all vendors
 app.get("/vendor", (req, res) => {
     db.Vendor.find()
     .then(dbVendor => {
@@ -50,6 +64,7 @@ app.get("/vendor", (req, res) => {
     });
 });
 
+//CREATE new vendor
 app.post("/newvendor", (req, res)=>{
     db.Vendor.create(req.body).then(dbVendor => {
         res.json(dbVendor);
@@ -59,7 +74,24 @@ app.post("/newvendor", (req, res)=>{
       });
 })
 
+//DELETE vendor
+app.delete("/vendor/:id", (req, res) => {
+  db.Vendor.deleteOne(
+    
+    {_id: req.params.id}
+
+  )
+  .then(dbVendor => {
+    res.json(dbVendor);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
+
+
 //Review routes
+//GET all reviews
 app.get("/review", (req, res) => {
     db.Review.find()
     .then(dbReview => {
@@ -70,6 +102,7 @@ app.get("/review", (req, res) => {
     });
 });
 
+//CREATE a review
 app.post("/newreview", (req, res)=>{
     db.Review.create(req.body).then(dbReview => {
         res.json(dbReview);
@@ -78,6 +111,18 @@ app.post("/newreview", (req, res)=>{
         res.json(err);
       });
 })
+
+
+//DELETE a review
+app.delete("/review/:id", (req, res) => {
+  db.Review.deleteOne({_id: req.params.id})
+  .then(dbReview => {
+    res.json(dbReview);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
 
 
 app.listen(PORT, () => {
