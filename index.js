@@ -1,7 +1,9 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser")
 
+const UsersRoute = require('./routes/users')
 
 const db = require("./models");
 
@@ -19,7 +21,8 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", { useNewUrlParser: true });
 
-//User routes
+//User routes 
+//GET all users
 app.get("/", (req, res) => {
     db.User.find()
     .then(dbUser => {
@@ -30,7 +33,8 @@ app.get("/", (req, res) => {
     });
 });
 
-app.post("/", (req, res)=>{
+//CREATE new user
+app.post("/newuser", (req, res)=>{
     db.User.create(req.body).then(dbUser => {
         res.json(dbUser);
       })
@@ -39,7 +43,35 @@ app.post("/", (req, res)=>{
       });
 })
 
+//UPDATE a user
+app.put("/user/:id", (req, res)=>{
+  db.User.findByIdAndUpdate(req.params.id,
+    req.body
+  ).then(dbUser => {
+    res.json(dbUser);
+  })
+  .catch(err => {
+    res.json(err);
+  })
+  });
+
+
+//DELETE user
+app.delete("/user/:id", (req, res) => {
+  db.User.deleteOne({_id: req.params.id})
+  .then(dbUser => {
+    res.json(dbUser);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
+
+
+
+
 //Vendor routes
+//GET all vendors
 app.get("/vendor", (req, res) => {
     db.Vendor.find()
     .then(dbVendor => {
@@ -50,8 +82,8 @@ app.get("/vendor", (req, res) => {
     });
 });
 
+//CREATE new vendor
 app.post("/newvendor", (req, res)=>{
-  console.log("inside post req");
     db.Vendor.create(req.body).then(dbVendor => {
         res.json(dbVendor);
       })
@@ -60,7 +92,36 @@ app.post("/newvendor", (req, res)=>{
       });
 })
 
+
+//UPDATE a vendor
+app.put("/vendor/:id", (req, res)=>{
+  db.Vendor.findByIdAndUpdate(req.params.id,
+    req.body
+  ).then(dbVendor => {
+    res.json(dbVendor);
+  })
+  .catch(err => {
+    res.json(err);
+  })
+  });
+
+//DELETE vendor
+app.delete("/vendor/:id", (req, res) => {
+  db.Vendor.deleteOne(
+    
+    {_id: req.params.id}
+
+  )
+  .then(dbVendor => {
+    res.json(dbVendor);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
+
 //Review routes
+//GET all reviews
 app.get("/review", (req, res) => {
     db.Review.find()
     .then(dbReview => {
@@ -71,6 +132,7 @@ app.get("/review", (req, res) => {
     });
 });
 
+//CREATE a review
 app.post("/newreview", (req, res)=>{
     db.Review.create(req.body).then(dbReview => {
         res.json(dbReview);
@@ -79,6 +141,31 @@ app.post("/newreview", (req, res)=>{
         res.json(err);
       });
 })
+
+
+//UPDATE a review
+app.put("/review/:id", (req, res)=>{
+db.Review.findByIdAndUpdate(req.params.id,
+  req.body
+).then(dbReview => {
+  res.json(dbReview);
+})
+.catch(err => {
+  res.json(err);
+})
+});
+
+
+//DELETE a review
+app.delete("/review/:id", (req, res) => {
+  db.Review.deleteOne({_id: req.params.id})
+  .then(dbReview => {
+    res.json(dbReview);
+  })
+  .catch(err => {
+    res.json(err);
+  });
+});
 
 
 app.listen(PORT, () => {
