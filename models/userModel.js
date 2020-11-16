@@ -10,8 +10,8 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    unique: true,
-    match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
+    // unique: true,
+    // match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
   },
   password: {
     type: String,
@@ -21,6 +21,9 @@ const UserSchema = new Schema({
   },
   isAdmin: {
     type: Boolean,
+  },
+  location: {
+    type: String,
   },
   favoriteVendor: [
     {
