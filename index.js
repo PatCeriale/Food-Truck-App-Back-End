@@ -1,9 +1,9 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-const bodyParser = require("body-parser")
 
-const UsersRoute = require('./routes/users')
+
+const UsersRoute = require('./routes/userRoutes')
 
 const db = require("./models");
 
