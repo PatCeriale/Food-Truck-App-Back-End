@@ -2,8 +2,10 @@ const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require ("cors");
+const bcrypt = require("bcrypt");
 
 const db = require("./models");
+const { User } = require("./models");
 
 const PORT = process.env.PORT || 5000;
 
@@ -21,6 +23,29 @@ app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", { useNewUrlParser: true });
 
+
+// //Sign In Route
+// app.post("/signin", (req, res)=>{
+//   db.User.findOne({
+//     where: {
+//       email: req.body.email
+//     }
+//   }).then(foundUser=>{
+//     if(!foundUser){
+//      return res.status(404).send("user not found")
+//     }
+//     if(bcrypt.compareSync(req.body.password, foundUser.password)) {
+//       return res.status(200).send("log in successful")
+//     } else {
+//       return res.status(403).send("wrong email or password")
+//     }
+//   })
+// });
+
+
+
+
+
 //User routes 
 //GET all users
 app.get("/", (req, res) => {
@@ -32,7 +57,7 @@ app.get("/", (req, res) => {
       res.json(err);
     });
 });
-
+ 
 //CREATE new user
 app.post("/newuser", (req, res)=>{
     db.User.create(req.body).then(dbUser => {

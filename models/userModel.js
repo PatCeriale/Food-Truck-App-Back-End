@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt")
 
 const Schema = mongoose.Schema;
 
@@ -10,8 +11,8 @@ const UserSchema = new Schema({
   },
   email: {
     type: String,
-    // unique: true,
-    // match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
+    unique: true,
+    match: [/.+@.+\..+/, "Please enter a valid e-mail address"],
   },
   password: {
     type: String,
@@ -36,6 +37,8 @@ const UserSchema = new Schema({
     default: Date.now,
   },
 });
+
+
 
 const User = mongoose.model("User", UserSchema);
 
