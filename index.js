@@ -3,6 +3,8 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require ("cors");
 
+const UsersRoute = require('./routes/userRoutes.js')
+
 const db = require("./models");
 
 const PORT = process.env.PORT || 5000;
@@ -55,6 +57,7 @@ app.put("/user/:id", (req, res)=>{
   })
   });
 
+
   // update users favorite vendor 
   app.put("/updatevendor/:id", (req, res) => {
   db.User.findOneAndUpdate(req.params.id, { $push: { favoriteVendor: req.body.vendorId } }, { new: true })
@@ -65,6 +68,7 @@ app.put("/user/:id", (req, res)=>{
         res.json(err);
       });
   });
+
 
 //DELETE user
 app.delete("/user/:id", (req, res) => {
