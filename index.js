@@ -3,7 +3,7 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 
 
-const UsersRoute = require('./routes/userRoutes')
+const UsersRoute = require('./routes/userRoutes.js')
 
 const db = require("./models");
 
