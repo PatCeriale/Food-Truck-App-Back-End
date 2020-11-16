@@ -1,18 +1,20 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-
+const cors = require ("cors");
 
 const UsersRoute = require('./routes/userRoutes.js')
 
 const db = require("./models");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // const User = require("./Models/userModel.js");
 const app = express();
 
 app.use(logger("dev"));
+
+app.use(cors());
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -56,6 +58,18 @@ app.put("/user/:id", (req, res)=>{
   });
 
 
+  // update users favorite vendor 
+  app.put("/updatevendor/:id", (req, res) => {
+  db.User.findOneAndUpdate(req.params.id, { $push: { favoriteVendor: req.body.vendorId } }, { new: true })
+      .then(dbUser => {
+        res.json(dbUser);
+      })
+      .catch(err => {
+        res.json(err);
+      });
+  });
+
+
 //DELETE user
 app.delete("/user/:id", (req, res) => {
   db.User.deleteOne({_id: req.params.id})
@@ -81,6 +95,7 @@ app.get("/vendor", (req, res) => {
       res.json(err);
     });
 });
+
 
 //CREATE new vendor
 app.post("/newvendor", (req, res)=>{
