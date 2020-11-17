@@ -2,7 +2,9 @@ const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const cors = require ("cors");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
+
+const UsersRoute = require('./routes/userRoutes.js')
 
 const db = require("./models");
 const { User } = require("./models");
@@ -60,25 +62,41 @@ app.get("/", (req, res) => {
  
 //CREATE new user
 app.post("/newuser", (req, res)=>{
+  console.log("i am a new user")
+  console.log(req.body)
     db.User.create(req.body).then(dbUser => {
+      console.log("error creating user")
+    console.log(dbUser)
+    console.log("i am inside of dbUser")
+
         res.json(dbUser);
       })
       .catch(err => {
+        console.log("============================")
+        console.log(err)
+        console.log("============================")
         res.json(err);
       });
 })
 
 //UPDATE a user
 app.put("/user/:id", (req, res)=>{
+  console.log(req.body)
   db.User.findByIdAndUpdate(req.params.id,
     req.body
   ).then(dbUser => {
+    console.log("====UPDATE===========USER=============")
+ 
     res.json(dbUser);
   })
   .catch(err => {
+    console.log("============================")
     res.json(err);
+    console.log("============================")
+
   })
   });
+
 
   // update users favorite vendor 
   app.put("/updatevendor/:id", (req, res) => {
@@ -90,6 +108,7 @@ app.put("/user/:id", (req, res)=>{
         res.json(err);
       });
   });
+
 
 //DELETE user
 app.delete("/user/:id", (req, res) => {
