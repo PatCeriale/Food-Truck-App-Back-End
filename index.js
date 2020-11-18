@@ -26,23 +26,23 @@ app.use(express.static("public"));
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", { useNewUrlParser: true });
 
 
-// //Sign In Route
-// app.post("/signin", (req, res)=>{
-//   db.User.findOne({
-//     where: {
-//       email: req.body.email
-//     }
-//   }).then(foundUser=>{
-//     if(!foundUser){
-//      return res.status(404).send("user not found")
-//     }
-//     if(bcrypt.compareSync(req.body.password, foundUser.password)) {
-//       return res.status(200).send("log in successful")
-//     } else {
-//       return res.status(403).send("wrong email or password")
-//     }
-//   })
-// });
+//Sign In Route
+app.post("/signin", (req, res)=>{
+  db.User.findOne({
+    where: {
+      email: req.body.email
+    }
+  }).then(foundUser=>{
+    if(!foundUser){
+     return res.status(404).send("user not found")
+    }
+    if(bcrypt.compareSync(req.body.password, foundUser.password)) {
+      return res.status(200).send("log in successful")
+    } else {
+      return res.status(403).send("wrong email or password")
+    }
+  })
+});
 
 
 
@@ -60,6 +60,38 @@ app.get("/", (req, res) => {
     });
 });
  
+// //user logIn route
+// app.get("/login", (req, res) => {
+//   console.log("==========you are logged in===========")
+
+//   db.User.findOne({
+//     where:{
+//       email: req.body.email,
+//       password: req.body.password
+//     }
+//   })
+  
+//   .then(dbUser => {
+//     console.log(User)
+//     console.log("==========you are still logged in========")
+//     res.json(dbUser);
+//     console.log(">>>>>>>>>>>dbUser<<<<<<<<<<")
+
+//   })
+//   .catch(err => {
+//     console.log("+++++++++++++++++++++");
+//     console.log(err);
+//     console.log("+++++++++++++++++++++");
+
+//     res.json(err);
+//   });
+// });
+
+//User Logout route
+app.get("/logout", (req, res)=>{
+  res.redirect("/")
+});
+
 //CREATE new user
 app.post("/newuser", (req, res)=>{
   console.log("i am a new user")
@@ -121,9 +153,6 @@ app.delete("/user/:id", (req, res) => {
   });
 });
 
-
-
-
 //Vendor routes
 //GET all vendors
 app.get("/vendor", (req, res) => {
@@ -136,7 +165,6 @@ app.get("/vendor", (req, res) => {
     });
 });
 
-
 //CREATE new vendor
 app.post("/newvendor", (req, res)=>{
     db.Vendor.create(req.body).then(dbVendor => {
@@ -146,7 +174,6 @@ app.post("/newvendor", (req, res)=>{
         res.json(err);
       });
 })
-
 
 //UPDATE a vendor
 app.put("/vendor/:id", (req, res)=>{
