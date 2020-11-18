@@ -4,10 +4,11 @@ const Schema = mongoose.Schema;
 
 const ReviewSchema = new Schema({
   userId: {
-    type: Number
+    type: mongoose.Types.ObjectId,
+    ref: "User",
   },
   vendorId: {
-    type: Number
+    type: String,
   },
 
   reviewText: {
@@ -15,12 +16,12 @@ const ReviewSchema = new Schema({
   },
 
   rating: {
-    type: Number
+    type: Number,
   },
   reviewCreated: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 const Review = mongoose.model("Review", ReviewSchema);
