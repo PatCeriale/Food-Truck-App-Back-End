@@ -24,27 +24,42 @@ app.use(express.json());
 app.use(express.static("public"));
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", { useNewUrlParser: true });
-
+mongoose.set('useFindAndModify', false);
 
 //Sign In Route
 app.post("/signin", (req, res)=>{
-  db.User.findOne({
-    where: {
-      email: req.body.email
-    }
-  }).then(foundUser=>{
+  console.log("==================")
+  db.User.findOne({ username: req.body.username, password: req.body.password }
+    
+    // where: {
+    //   email: req.body.email,
+    //   password: req.body.password
+    // }
+  ).then(foundUser=>{
+    console.log("<<<<<<USER FOUND?>>>>>>>>")
     if(!foundUser){
+      console.log("<<<<<<USER FOUND?>>>>>>>>")
+
+
      return res.status(404).send("user not found")
     }
-    if(bcrypt.compareSync(req.body.password, foundUser.password)) {
-      return res.status(200).send("log in successful")
-    } else {
-      return res.status(403).send("wrong email or password")
+    // if(bcrypt.compareSync(req.body.password, foundUser.password)) {
+    //   return res.status(200).send("log in successful")
+    // } 
+    else {
+      console.log("+++++++++++++++++++++++")
+      console.log(foundUser)
+      console.log("+++++++++++++++++++++++")
+
+      return res.status(200).json(foundUser)
     }
   })
 });
 
-
+//User Logout route
+app.get("/logout", (req, res)=>{
+  res.redirect("/")
+});
 
 
 
@@ -87,10 +102,7 @@ app.get("/", (req, res) => {
 //   });
 // });
 
-//User Logout route
-app.get("/logout", (req, res)=>{
-  res.redirect("/")
-});
+
 
 //CREATE new user
 app.post("/newuser", (req, res)=>{
@@ -113,11 +125,12 @@ app.post("/newuser", (req, res)=>{
 
 //UPDATE a user
 app.put("/user/:id", (req, res)=>{
+  console.log(">>>>>>>>>>>>>>I am inside of dummy user<<<<<<<<<")
   console.log(req.body)
-  db.User.findByIdAndUpdate(req.params.id,
-    req.body
-  ).then(dbUser => {
-    console.log("====UPDATE===========USER=============")
+
+  db.User.findByIdAndUpdate(req.params.id,req.body).then(dbUser => {
+    console.log("====UPDATE=====A======USER=============")
+    console.log(req.body)
  
     res.json(dbUser);
   })

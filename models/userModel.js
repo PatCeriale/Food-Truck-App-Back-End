@@ -35,10 +35,7 @@ const UserSchema = new Schema({
   userCreated: {
     type: Date,
     default: Date.now,
-  },
-  location: {
-    type: String,
-  },
+  }
 
 });
 
