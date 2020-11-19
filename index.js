@@ -1,13 +1,13 @@
 const express = require("express");
 const logger = require("morgan");
 const mongoose = require("mongoose");
-const cors = require ("cors");
+const cors = require("cors");
 // const bcrypt = require("bcrypt");
 
-const UsersRoute = require('./routes/userRoutes.js')
+const allRoutes = require('./routes');
 
 const db = require("./models");
-const { User } = require("./models");
+// const { User } = require("./models");
 
 const PORT = process.env.PORT || 5000;
 
@@ -23,245 +23,213 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", { useNewUrlParser: true });
-mongoose.set('useFindAndModify', false);
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", {
+  useNewUrlParser: true,
+});
+mongoose.set("useFindAndModify", false);
+
+app.use("/", allRoutes)
+
 
 //Sign In Route
-app.post("/signin", (req, res)=>{
-  console.log("==================")
-  db.User.findOne({ username: req.body.username, password: req.body.password }
-    
-    // where: {
-    //   email: req.body.email,
-    //   password: req.body.password
-    // }
-  ).then(foundUser=>{
-    console.log("<<<<<<USER FOUND?>>>>>>>>")
-    if(!foundUser){
-      console.log("<<<<<<USER FOUND?>>>>>>>>")
+app.post("/signin", (req, res) => {
+  console.log("==================");
+  db.User.findOne({
+    username: req.body.username,
+    password: req.body.password,
+  }).then((foundUser) => {
+    console.log("<<<<<<USER FOUND?>>>>>>>>");
+    if (!foundUser) {
+      console.log("<<<<<<USER NOT FOUND?>>>>>>>>");
 
-
-     return res.status(404).send("user not found")
+      res.status(404).send("user not found");
     }
     // if(bcrypt.compareSync(req.body.password, foundUser.password)) {
     //   return res.status(200).send("log in successful")
-    // } 
+    // }
     else {
-      console.log("+++++++++++++++++++++++")
-      console.log(foundUser)
-      console.log("+++++++++++++++++++++++")
+      console.log("+++++++++++++++++++++++");
+      console.log(foundUser);
+      console.log("+++++++++++++++++++++++");
 
-      return res.status(200).json(foundUser)
+      res.status(200).json(foundUser);
     }
-  })
+  });
 });
 
 //User Logout route
-app.get("/logout", (req, res)=>{
-  res.redirect("/")
+app.get("/logout", (req, res) => {
+  console.log("you are logged out")
+  req.logout();
+  console.log("you are logged out")
 });
 
-
-
-//User routes 
+//User routes
 //GET all users
-app.get("/", (req, res) => {
-    db.User.find()
-    .then(dbUser => {
-      res.json(dbUser);
-    })
-    .catch(err => {
-      res.json(err);
-    });
-});
- 
-// //user logIn route
-// app.get("/login", (req, res) => {
-//   console.log("==========you are logged in===========")
-
-//   db.User.findOne({
-//     where:{
-//       email: req.body.email,
-//       password: req.body.password
-//     }
-//   })
-  
-//   .then(dbUser => {
-//     console.log(User)
-//     console.log("==========you are still logged in========")
-//     res.json(dbUser);
-//     console.log(">>>>>>>>>>>dbUser<<<<<<<<<<")
-
-//   })
-//   .catch(err => {
-//     console.log("+++++++++++++++++++++");
-//     console.log(err);
-//     console.log("+++++++++++++++++++++");
-
-//     res.json(err);
-//   });
+// app.get("/user", (req, res) => {
+//   db.User.find()
+//     .then((dbUser) => {
+//       res.json(dbUser);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
 // });
 
+// //CREATE new user
+// app.post("/signup", (req, res) => {
+//   console.log("i am a new user");
+//   console.log(req.body);
+//   db.User.create(req.body)
+//     .then((dbUser) => {
+//       console.log("error creating user");
+//       console.log(dbUser);
+//       console.log("i am inside of dbUser");
 
+//       res.json(dbUser);
+//     })
+//     .catch((err) => {
+//       console.log("============================");
+//       console.log(err);
+//       console.log("============================");
+//       res.json(err);
+//     });
+// });
 
-//CREATE new user
-app.post("/newuser", (req, res)=>{
-  console.log("i am a new user")
-  console.log(req.body)
-    db.User.create(req.body).then(dbUser => {
-      console.log("error creating user")
-    console.log(dbUser)
-    console.log("i am inside of dbUser")
+// //UPDATE a user
+// app.put("/user/:id", (req, res) => {
+//   console.log(">>>>>>>>>>>>>>I am inside of dummy user<<<<<<<<<");
+//   console.log(req.body);
 
-        res.json(dbUser);
-      })
-      .catch(err => {
-        console.log("============================")
-        console.log(err)
-        console.log("============================")
-        res.json(err);
-      });
-})
+//   db.User.findByIdAndUpdate(req.params.id, req.body)
+//     .then((dbUser) => {
+//       console.log("====UPDATE=====A======USER=============");
+//       console.log(req.body);
 
-//UPDATE a user
-app.put("/user/:id", (req, res)=>{
-  console.log(">>>>>>>>>>>>>>I am inside of dummy user<<<<<<<<<")
-  console.log(req.body)
+//       res.json(dbUser);
+//     })
+//     .catch((err) => {
+//       console.log("============================");
+//       res.json(err);
+//       console.log("============================");
+//     });
+// });
 
-  db.User.findByIdAndUpdate(req.params.id,req.body).then(dbUser => {
-    console.log("====UPDATE=====A======USER=============")
-    console.log(req.body)
- 
-    res.json(dbUser);
-  })
-  .catch(err => {
-    console.log("============================")
-    res.json(err);
-    console.log("============================")
+// // update users favorite vendor
+// app.put("/updatevendor/:id", (req, res) => {
+//   db.User.findOneAndUpdate(
+//     req.params.id,
+//     { $push: { favoriteVendor: req.body.vendorId } },
+//     { new: true }
+//   )
+//     .then((dbUser) => {
+//       res.json(dbUser);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
-  })
-  });
-
-
-  // update users favorite vendor 
-  app.put("/updatevendor/:id", (req, res) => {
-  db.User.findOneAndUpdate(req.params.id, { $push: { favoriteVendor: req.body.vendorId } }, { new: true })
-      .then(dbUser => {
-        res.json(dbUser);
-      })
-      .catch(err => {
-        res.json(err);
-      });
-  });
-
-
-//DELETE user
-app.delete("/user/:id", (req, res) => {
-  db.User.deleteOne({_id: req.params.id})
-  .then(dbUser => {
-    res.json(dbUser);
-  })
-  .catch(err => {
-    res.json(err);
-  });
-});
+// //DELETE user
+// app.delete("/user/:id", (req, res) => {
+//   db.User.deleteOne({ _id: req.params.id })
+//     .then((dbUser) => {
+//       res.json(dbUser);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
 //Vendor routes
 //GET all vendors
-app.get("/vendor", (req, res) => {
-    db.Vendor.find()
-    .then(dbVendor => {
-      res.json(dbVendor);
-    })
-    .catch(err => {
-      res.json(err);
-    });
-});
+// app.get("/vendor", (req, res) => {
+//   db.Vendor.find()
+//     .then((dbVendor) => {
+//       res.json(dbVendor);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
-//CREATE new vendor
-app.post("/newvendor", (req, res)=>{
-    db.Vendor.create(req.body).then(dbVendor => {
-        res.json(dbVendor);
-      })
-      .catch(err => {
-        res.json(err);
-      });
-})
+// //CREATE new vendor
+// app.post("/newvendor", (req, res) => {
+//   db.Vendor.create(req.body)
+//     .then((dbVendor) => {
+//       res.json(dbVendor);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
-//UPDATE a vendor
-app.put("/vendor/:id", (req, res)=>{
-  db.Vendor.findByIdAndUpdate(req.params.id,
-    req.body
-  ).then(dbVendor => {
-    res.json(dbVendor);
-  })
-  .catch(err => {
-    res.json(err);
-  })
-  });
+// //UPDATE a vendor
+// app.put("/vendor/:id", (req, res) => {
+//   db.Vendor.findByIdAndUpdate(req.params.id, req.body)
+//     .then((dbVendor) => {
+//       res.json(dbVendor);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
-//DELETE vendor
-app.delete("/vendor/:id", (req, res) => {
-  db.Vendor.deleteOne(
-    
-    {_id: req.params.id}
+// //DELETE vendor
+// app.delete("/vendor/:id", (req, res) => {
+//   db.Vendor.deleteOne({ _id: req.params.id })
+// //     .then((dbVendor) => {
+//       res.json(dbVendor);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
-  )
-  .then(dbVendor => {
-    res.json(dbVendor);
-  })
-  .catch(err => {
-    res.json(err);
-  });
-});
+// //Review routes
+// //GET all reviews
+// app.get("/review", (req, res) => {
+//   db.Review.find()
+//     .then((dbReview) => {
+//       res.json(dbReview);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
-//Review routes
-//GET all reviews
-app.get("/review", (req, res) => {
-    db.Review.find()
-    .then(dbReview => {
-      res.json(dbReview);
-    })
-    .catch(err => {
-      res.json(err);
-    });
-});
+// //CREATE a review
+// app.post("/newreview", (req, res) => {
+//   db.Review.create(req.body)
+//     .then((dbReview) => {
+//       res.json(dbReview);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
-//CREATE a review
-app.post("/newreview", (req, res)=>{
-    db.Review.create(req.body).then(dbReview => {
-        res.json(dbReview);
-      })
-      .catch(err => {
-        res.json(err);
-      });
-})
+// //UPDATE a review
+// app.put("/review/:id", (req, res) => {
+//   db.Review.findByIdAndUpdate(req.params.id, req.body)
+//     .then((dbReview) => {
+//       res.json(dbReview);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
-
-//UPDATE a review
-app.put("/review/:id", (req, res)=>{
-db.Review.findByIdAndUpdate(req.params.id,
-  req.body
-).then(dbReview => {
-  res.json(dbReview);
-})
-.catch(err => {
-  res.json(err);
-})
-});
-
-
-//DELETE a review
-app.delete("/review/:id", (req, res) => {
-  db.Review.deleteOne({_id: req.params.id})
-  .then(dbReview => {
-    res.json(dbReview);
-  })
-  .catch(err => {
-    res.json(err);
-  });
-});
-
+// //DELETE a review
+// app.delete("/review/:id", (req, res) => {
+//   db.Review.deleteOne({ _id: req.params.id })
+//     .then((dbReview) => {
+//       res.json(dbReview);
+//     })
+//     .catch((err) => {
+//       res.json(err);
+//     });
+// });
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
