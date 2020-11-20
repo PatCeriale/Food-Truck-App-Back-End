@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 // const bcrypt = require("bcrypt");
 
-const allRoutes = require('./routes');
+const allRoutes = require("./routes");
 
 const db = require("./models");
 // const { User } = require("./models");
@@ -16,7 +16,11 @@ const app = express();
 
 app.use(logger("dev"));
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://truckntastyfood.herokuapp.com"],
+  })
+);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -28,8 +32,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", {
 });
 mongoose.set("useFindAndModify", false);
 
-app.use("/", allRoutes)
-
+app.use("/", allRoutes);
 
 //Sign In Route
 app.post("/signin", (req, res) => {
@@ -59,9 +62,9 @@ app.post("/signin", (req, res) => {
 
 //User Logout route
 app.get("/logout", (req, res) => {
-  console.log("you are logged out")
+  console.log("you are logged out");
   req.logout();
-  console.log("you are logged out")
+  console.log("you are logged out");
 });
 
 //User routes
