@@ -18,7 +18,9 @@ app.use(logger("dev"));
 
 app.use(
   cors({
-    origin: ["https://truckntastyfood.herokuapp.com"],
+    // origin: ["https://truckntastyfood.herokuapp.com"],
+    origin: ["http://localhost:3000"],
+
   })
 );
 
@@ -26,11 +28,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(express.static("public"));
+app.use("/", allRoutes);
 
 mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/foodtruck", {
   useNewUrlParser: true,
 });
 mongoose.set("useFindAndModify", false);
+
 
 app.use("/", allRoutes);
 
