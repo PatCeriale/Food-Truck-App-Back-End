@@ -18,7 +18,11 @@ app.use(logger("dev"));
 
 app.use(
   cors({
-    origin: ["https://truckntastyfood.herokuapp.com", "http://localhost:3001"],
+    origin: [
+      "https://truckntastyfood.herokuapp.com",
+      "http://localhost:3001",
+      "http://localhost:3000",
+    ],
   })
 );
 
